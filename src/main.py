@@ -3,7 +3,7 @@ main.py
 """
 
 import sys
-from extract_hrefs import extract_hrefs
+from extract_hrefs import extract_download_links, extract_song_pages_paths
 from fetch_html import fetch_html, fetch_htmls
 
 def main():
@@ -20,18 +20,13 @@ def main():
     if not html_content:
         return
 
-    song_pages_paths = extract_hrefs(html_content)
-
-    print("paths:")
-    for path in song_pages_paths:
-        print(path)
-    print("\n")
-
+    song_pages_paths = extract_song_pages_paths(html_content)
     song_pages_htmls = fetch_htmls(song_pages_paths)
 
-    print("htmls:")
     for html in song_pages_htmls:
-        print(html)
+        song_download_links = extract_download_links(html)
+        for link in song_download_links:
+            print(link)
 
 if __name__ == "__main__":
     main()
