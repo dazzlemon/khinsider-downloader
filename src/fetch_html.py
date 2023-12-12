@@ -4,9 +4,10 @@ fetch_html.py
 
 from http import HTTPStatus
 import requests
-from bs4 import BeautifulSoup
 from functional import seq
 
+
+BASE_URL = 'https://downloads.khinsider.com'
 
 def fetch_html(url, timeout=5):
     """
@@ -27,18 +28,11 @@ def fetch_html(url, timeout=5):
         return None
 
 
-def extract_hrefs(html_content):
+def fetch_htmls(paths):
     """
-    Extract href values from td elements with class "playlistDownloadSong."
+    Fetch HTML content from a list of paths.
     """
-    if html_content is None:
-        return []
-
-    soup = BeautifulSoup(html_content, 'html.parser')
-
-    return seq(
-        soup.find_all('td', class_='playlistDownloadSong'),
-    )\
-        .filter(lambda td: td.a)\
-        .map(lambda td: td.a['href'])\
+    return seq(paths)\
+        .map(lambda path: fetch_html(BASE_URL + path))\
+        .filter(lambda html: html)\
         .to_list()
