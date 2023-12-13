@@ -9,6 +9,7 @@ from functional import seq
 
 BASE_URL = 'https://downloads.khinsider.com'
 
+
 def fetch_html(url, timeout=5):
     """
     Fetch HTML content from a given URL.
