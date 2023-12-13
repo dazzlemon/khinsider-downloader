@@ -25,12 +25,12 @@ def main():
     song_pages_paths = extract_song_pages_paths(html_content)
     song_pages_htmls = fetch_htmls(song_pages_paths)
 
-    flac_links = seq(song_pages_htmls)\
+    download_links = seq(song_pages_htmls)\
         .map(extract_download_links)\
         .map(choose_best_download_link)\
         .to_list()
 
-    for link in flac_links:
+    for link in download_links:
         print(link)
 
 
