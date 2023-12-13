@@ -7,7 +7,7 @@ import os
 from functional import seq
 from extract_song_pages import extract_song_pages_paths
 from fetch_html import fetch_html, fetch_htmls
-from download_links import extract_download_links, choose_best_download_link
+from download_links import extract_download_links, choose_best_download_link, extract_covers_links
 from download_file import download_file
 
 def main():
@@ -26,6 +26,7 @@ def main():
         print("Empty html.", file=sys.stderr)
         sys.exit(-1)
 
+    covers_links = extract_covers_links(html_content)
     song_pages_paths = extract_song_pages_paths(html_content)
     song_pages_htmls = fetch_htmls(song_pages_paths)
 
@@ -36,7 +37,7 @@ def main():
 
     os.makedirs(save_path, exist_ok=True)
 
-    for link in download_links:
+    for link in download_links + covers_links:
         download_file(link, save_path)
 
 
