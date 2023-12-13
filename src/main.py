@@ -37,7 +37,6 @@ def main():
     os.makedirs(save_path, exist_ok=True)
 
     for link in download_links:
-        print(f"Downloading {link}")
         download_file(link, save_path)
 
 
