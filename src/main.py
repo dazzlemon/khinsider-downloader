@@ -7,7 +7,6 @@ import os
 from urllib.parse import unquote
 from functional import seq
 from impl.extract_song_pages import extract_song_pages_paths
-from impl.fetch_html import fetch_html, HtmlException
 
 from impl.download_links import (
     extract_download_links,
@@ -15,8 +14,9 @@ from impl.download_links import (
     extract_covers_links
 )
 
-from impl.download_file import download_file, filename_from_url
-from impl.util import not_none
+from packages.fetch_html import fetch_html, HtmlException
+from packages.download_file import download_file, filename_from_url
+from packages.util import not_none
 
 def main():
     """

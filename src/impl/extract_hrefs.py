@@ -4,7 +4,7 @@ extract_hrefs.py
 
 from bs4 import BeautifulSoup
 from functional import seq
-from impl.util import not_none
+from packages.util import not_none
 
 
 def extract_hrefs(html_content, selector, class_name, link_extractor=lambda a: a):
