@@ -2,6 +2,7 @@
 fetch_html.py
 """
 
+import sys
 from http import HTTPStatus
 import requests
 from functional import seq
@@ -22,10 +23,10 @@ def fetch_html(url, timeout=5):
             html_content = response.text
             return html_content
 
-        print(f"Failed to retrieve the webpage. Code: {status}")
+        print(f"Failed to retrieve the webpage. Code: {status}", file=sys.stderr)
         return None
     except requests.exceptions.RequestException as error:
-        print(f"An error occurred: {error}")
+        print(f"An error occurred: {error}", file=sys.stderr)
         return None
 
 
