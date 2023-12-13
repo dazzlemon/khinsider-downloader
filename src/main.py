@@ -4,7 +4,6 @@ main.py
 
 import sys
 import os
-from urllib.parse import unquote
 from functional import seq
 from impl.extract_song_pages import extract_song_pages_paths
 
@@ -14,9 +13,9 @@ from impl.download_links import (
     extract_covers_links
 )
 
-from packages.fetch_html import fetch_html, HtmlException
 from packages.download_file import download_file, filename_from_url
-from packages.util import not_none
+from cli.fetch_html import fetch_htmls, fetch_main_page
+
 
 def main():
     """
@@ -29,22 +28,28 @@ def main():
     url = sys.argv[1]
     save_path = sys.argv[2]
 
-    print('Fetching main page')
-    try:
-        html_content = fetch_html(url)
-    except HtmlException as error:
-        print(error.message, file=sys.stderr)
-        sys.exit(-1)
-    print('')
+    html_content = fetch_main_page(url)
+    covers_links = extract_covers_links_cli(html_content)
+    song_pages_paths = extract_song_pages_paths_cli(html_content)
+    download_links = get_song_download_links(song_pages_paths)
+    download(save_path, download_links + covers_links)
 
+
+def extract_covers_links_cli(html_content):
     print('Scraping cover art links', end='')
     covers_links = extract_covers_links(html_content)
     print(f' - Got {len(covers_links)}\n')
+    return covers_links
 
+
+def extract_song_pages_paths_cli(html_content):
     print('Scraping song pages links', end='')
     song_pages_paths = extract_song_pages_paths(html_content)
     print(f' - Got {len(song_pages_paths)}\n')
+    return song_pages_paths
 
+
+def get_song_download_links(song_pages_paths):
     print('Scraping song download links')
     song_pages_htmls = fetch_htmls(song_pages_paths)
 
@@ -53,39 +58,18 @@ def main():
         .map(choose_best_download_link)\
         .to_list()
     print('')
+    return download_links
 
+
+def download(save_path, links):
     print("Downloading:")
     os.makedirs(save_path, exist_ok=True)
 
-    for link in download_links + covers_links:
+    for link in links:
         filename = filename_from_url(link)
         full_path = os.path.join(save_path, filename)
         print(f'\t{filename}')
         download_file(link, full_path)
-
-
-BASE_URL = 'https://downloads.khinsider.com'
-
-
-def fetch_htmls(paths):
-    """
-    Fetch HTML content from a list of paths.
-    """
-    return seq(paths)\
-        .map(fetch_html_from_path)\
-        .filter(not_none)\
-        .to_list()
-
-
-def fetch_html_from_path(path):
-    """
-    Fetch HTML content from a paths.
-    """
-    url = BASE_URL + path
-    filename = unquote(filename_from_url(url))
-    songname, _ = os.path.splitext(filename)
-    print(f'\t{songname}')
-    return fetch_html(url)
 
 
 if __name__ == "__main__":
