@@ -3,9 +3,13 @@ fetch_html.py
 """
 
 import sys
+import os
+from urllib.parse import unquote
 from http import HTTPStatus
 import requests
 from functional import seq
+from util import not_none
+from download_file import filename_from_url
 
 
 BASE_URL = 'https://downloads.khinsider.com'
@@ -35,6 +39,17 @@ def fetch_htmls(paths):
     Fetch HTML content from a list of paths.
     """
     return seq(paths)\
-        .map(lambda path: fetch_html(BASE_URL + path))\
-        .filter(lambda html: html)\
+        .map(fetch_html_from_path)\
+        .filter(not_none)\
         .to_list()
+
+
+def fetch_html_from_path(path):
+    """
+    Fetch HTML content from a paths.
+    """
+    url = BASE_URL + path
+    filename = unquote(filename_from_url(url))
+    songname, _ = os.path.splitext(filename)
+    print(f'\t"{songname}"')
+    return fetch_html(url)
