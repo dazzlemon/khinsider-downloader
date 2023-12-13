@@ -6,11 +6,17 @@ import sys
 import os
 from urllib.parse import unquote
 from functional import seq
-from extract_song_pages import extract_song_pages_paths
-from fetch_html import fetch_html
-from download_links import extract_download_links, choose_best_download_link, extract_covers_links
-from download_file import download_file, filename_from_url
-from util import not_none
+from impl.extract_song_pages import extract_song_pages_paths
+from impl.fetch_html import fetch_html, HtmlException
+
+from impl.download_links import (
+    extract_download_links,
+    choose_best_download_link,
+    extract_covers_links
+)
+
+from impl.download_file import download_file, filename_from_url
+from impl.util import not_none
 
 def main():
     """
@@ -26,8 +32,8 @@ def main():
     print('Fetching main page')
     try:
         html_content = fetch_html(url)
-    except Exception as error:
-        print(error, file=sys.stderr)
+    except HtmlException as error:
+        print(error.message, file=sys.stderr)
         sys.exit(-1)
     print('')
 

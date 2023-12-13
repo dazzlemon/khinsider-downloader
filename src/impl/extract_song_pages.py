@@ -1,7 +1,7 @@
 """
 extract_song_pages.py
 """
-from extract_hrefs import extract_hrefs
+from impl.extract_hrefs import extract_hrefs
 
 
 def extract_song_pages_paths(html_content):

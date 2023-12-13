@@ -4,6 +4,8 @@ fetch_html.py
 
 from http import HTTPStatus
 import requests
+from html_exception import HtmlException
+from empty_html_exception import EmptyHtmlException
 
 
 def fetch_html(url, timeout=5):
@@ -13,14 +15,14 @@ def fetch_html(url, timeout=5):
     try:
         response = requests.get(url, timeout=timeout)
     except requests.exceptions.RequestException as error:
-        raise Exception(f'An error occurred: {error}')
+        raise HtmlException('An error occurred') from error
 
     status = response.status_code
     if status != HTTPStatus.OK:
-        raise Exception('Failed to retrieve the webpage. Code: {status}')
+        raise HtmlException('Failed to retrieve the webpage. Code: {status}')
 
     html_content = response.text
     if html_content is None:
-        raise Exception('Empty html.')
+        raise EmptyHtmlException()
 
     return html_content

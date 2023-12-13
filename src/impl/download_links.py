@@ -2,7 +2,7 @@
 download_links.py
 """
 from functional import seq
-from extract_hrefs import extract_hrefs
+from impl.extract_hrefs import extract_hrefs
 
 
 def extract_download_links(html_content):
