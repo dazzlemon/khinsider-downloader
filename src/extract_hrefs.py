@@ -35,6 +35,9 @@ def extract_download_links(html_content):
     return seq(
         soup.find_all('span', class_='songDownloadLink')
     )\
-        .map(lambda span: span.find_previous('a')['href'] if span.find_previous('a') else None)\
-        .filter(lambda href: href is not None)\
+        .map(lambda span: span.find_previous('a'))\
+				.filter(lambda span: span)\
+				.map(lambda span: span['href'])\
+        .filter(lambda href: href)\
         .to_list()
+	
