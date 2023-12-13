@@ -26,7 +26,7 @@ def extract_song_pages_paths(html_content):
 
 def extract_download_links(html_content):
     """
-    Extract donwload links.
+    Extract download links.
     """
     if html_content is None:
         return []
