@@ -4,8 +4,8 @@ fetch_html.py
 
 from http import HTTPStatus
 import requests
-from html_exception import HtmlException
-from empty_html_exception import EmptyHtmlException
+from .html_exception import HtmlException
+from .empty_html_exception import EmptyHtmlException
 
 
 def fetch_html(url, timeout=5):

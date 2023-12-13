@@ -1,7 +1,7 @@
 """
 EmptyHtmlException
 """
-from html_exception import HtmlException
+from .html_exception import HtmlException
 
 
 class EmptyHtmlException(HtmlException):
