@@ -11,16 +11,12 @@ def extract_hrefs(html_content, selector, class_name, link_extractor=lambda a: a
     """
     Extract links based on the provided selector and class.
     """
-    if html_content is None:
-        return []
+    elements = BeautifulSoup(html_content, 'html.parser')\
+        .find_all(selector, class_=class_name)
 
-    soup = BeautifulSoup(html_content, 'html.parser')
-
-    return seq(
-        soup.find_all(selector, class_=class_name)
-    )\
-			.map(link_extractor)\
-			.filter(not_none)\
-			.map(lambda a: a['href'])\
-			.filter(not_none)\
-			.to_list()
+    return seq(elements)\
+        .map(link_extractor)\
+        .filter(not_none)\
+        .map(lambda a: a['href'])\
+        .filter(not_none)\
+        .to_list()
