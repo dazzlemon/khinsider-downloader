@@ -19,7 +19,9 @@ def fetch_html(url, timeout=5):
 
     status = response.status_code
     if status != HTTPStatus.OK:
-        raise HtmlException('Failed to retrieve the webpage. Code: {status}')
+        raise HtmlException(
+            'Failed to retrieve the webpage from url "{url}". Code: {status}'
+        )
 
     html_content = response.text
     if html_content is None:
