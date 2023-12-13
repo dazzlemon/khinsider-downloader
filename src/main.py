@@ -4,13 +4,13 @@ main.py
 
 import sys
 from functional import seq
-from extract_hrefs import extract_download_links, extract_song_pages_paths
+from extract_song_pages import extract_song_pages_paths
 from fetch_html import fetch_html, fetch_htmls
-
+from download_links import extract_download_links, choose_best_download_link
 
 def main():
     """
-    main
+    Entry point.
     """
     if len(sys.argv) != 2:
         print("Usage: python main.py <URL>")
@@ -32,23 +32,6 @@ def main():
 
     for link in flac_links:
         print(link)
-
-
-def choose_best_download_link(links):
-    """
-    Choose flac if any, otherwise take mp3.
-    """
-    if len(links) == 0:
-        return None
-
-    flac_links = seq(links)\
-        .filter(lambda link: link.endswith('.flac'))\
-        .to_list()
-
-    if len(flac_links) == 0:
-        return links[0]
-
-    return flac_links[0]
 
 
 if __name__ == "__main__":
