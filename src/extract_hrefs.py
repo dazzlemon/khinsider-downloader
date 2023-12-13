@@ -15,12 +15,13 @@ def extract_song_pages_paths(html_content):
 
     soup = BeautifulSoup(html_content, 'html.parser')
 
-    return seq(
+    links_elements = seq(
         soup.find_all('td', class_='playlistDownloadSong'),
     )\
-        .filter(lambda td: td.a)\
-        .map(lambda td: td.a['href'])\
+			  .map(lambda td: td.a)\
         .to_list()
+
+    return extract_hrefs(links_elements)
 
 
 def extract_download_links(html_content):
@@ -32,12 +33,28 @@ def extract_download_links(html_content):
 
     soup = BeautifulSoup(html_content, 'html.parser')
 
-    return seq(
+    links_elements = seq(
         soup.find_all('span', class_='songDownloadLink')
     )\
         .map(lambda span: span.find_previous('a'))\
-				.filter(lambda span: span)\
-				.map(lambda span: span['href'])\
-        .filter(lambda href: href)\
         .to_list()
-	
+
+    return extract_hrefs(links_elements)
+
+
+def extract_hrefs(links_elements):
+    """
+    Given a list of <a>'s, extract their hrefs
+    """
+    return seq(links_elements)\
+        .filter(not_none)\
+        .map(lambda a: a['href'])\
+        .filter(not_none)\
+        .to_list()
+
+
+def not_none(something):
+    """
+    A short function to use with filter.
+    """
+    return something is not None
