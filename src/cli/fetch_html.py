@@ -3,6 +3,7 @@ fetch_html cli.
 """
 import sys
 import os
+import shutil
 from urllib.parse import unquote
 from functional import seq
 from packages.util import not_none
@@ -17,10 +18,15 @@ def fetch_htmls(paths):
     """
     Fetch HTML content from a list of paths.
     """
-    return seq(paths)\
+    res = seq(paths)\
         .map(fetch_html_from_path)\
         .filter(not_none)\
         .to_list()
+
+    clear_line()
+    print('Scraping song download links - Done')
+
+    return res
 
 
 def fetch_html_from_path(path):
@@ -30,7 +36,8 @@ def fetch_html_from_path(path):
     url = BASE_URL + path
     filename = unquote(filename_from_url(url))
     songname, _ = os.path.splitext(filename)
-    print(f'\t{songname}')
+    clear_line()
+    print(f'Scraping song download links - {songname}', end='\r')
     try:
         return fetch_html(url)
     except HtmlException as error:
@@ -48,5 +55,9 @@ def fetch_main_page(url):
     except HtmlException as error:
         print(error.message, file=sys.stderr)
         sys.exit(-1)
-    print('')
     return html_content
+
+
+def clear_line():
+    columns, _ = shutil.get_terminal_size()
+    print(' ' * columns, end='\r')
