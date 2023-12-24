@@ -7,7 +7,7 @@ class MyFilesPipeline(FilesPipeline):
     @classmethod
     def from_crawler(cls, crawler, *args, **kwargs):
         cls.FILES_STORE = crawler.settings.get('FILES_STORE')
-        
+
         return super().from_crawler(crawler, *args, **kwargs)
 
     def open_spider(self, spider):
@@ -18,5 +18,5 @@ class MyFilesPipeline(FilesPipeline):
         filename = unquote(os.path.basename(urlparse(file_url).path))
         self.downloader.enqueue_file(file_url, filename=filename, path=self.FILES_STORE)
 
-    def close_spider(self, spider):
+    def close_spider(self, _):
         self.downloader.download()
