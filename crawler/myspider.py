@@ -8,14 +8,13 @@ class MySpider(scrapy.Spider):
         'CONCURRENT_REQUESTS': 8,
         'CONCURRENT_REQUESTS_PER_DOMAIN': 8,
         'ITEM_PIPELINES': {
-            'scrapy.pipelines.files.FilesPipeline': 1,
+            'crawler.pipelines.MyFilesPipeline': 1,
         },
     }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.start_url = kwargs.get('start_url')
-        self.links = []
 
     def start_requests(self):
         if not self.start_url:
