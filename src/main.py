@@ -51,7 +51,6 @@ def get_song_download_links(song_pages_paths):
         song_pages_htmls = pool.map(fetch_html_from_path, song_pages_paths)
         song_pages_htmls = filter(not_none, song_pages_htmls)
         downloads_links = pool.map(extract_download_links, song_pages_htmls)
-
         best_download_links =  pool.map(choose_best_download_link, downloads_links)
 
     clear_line()
