@@ -29,13 +29,6 @@ class MySpider(scrapy.Spider):
             yield response.follow(path, callback=self.parse_song_page)
 
     def parse_song_page(self, response):
-        download_links = response.xpath('//span[@class="songDownloadLink"]/parent::a/@href').getall()
-        print(self.choose_best_download_link(download_links))
-
-    def choose_best_download_link(self, links):
-        """
-        Choose flac if any, otherwise take mp3.
-        """
+        links = response.xpath('//span[@class="songDownloadLink"]/parent::a/@href').getall()
         flac_link = next(filter(lambda link: link.endswith('.flac'), links), None)
-
-        return flac_link or next(iter(links), None)
+        print(flac_link or next(iter(links), None))
