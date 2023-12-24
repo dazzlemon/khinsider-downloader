@@ -1,1 +1,1 @@
-![short_demo](https://github.com/dazzlemon/khinsider-downloader/assets/30831873/730f2f31-3a0d-4133-8fba-e707a3008218)
+![v2](https://github.com/dazzlemon/khinsider-downloader/assets/30831873/dc1b2fad-6a78-425c-ab88-519ccf7d5b33)
