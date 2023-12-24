@@ -52,8 +52,8 @@ def extract_song_pages_paths_cli(html_content):
 
 
 def get_song_download_links(song_pages_paths):
-    print('Scraping song download links')
-    
+    print('Scraping song download links', end='\r')
+
     with multiprocessing.Pool() as pool:
         song_pages_htmls = pool.map(fetch_html_from_path, song_pages_paths)
         song_pages_htmls = filter(not_none, song_pages_htmls)
