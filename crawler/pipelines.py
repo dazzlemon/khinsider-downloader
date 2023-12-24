@@ -6,16 +6,12 @@ from parfive import Downloader
 class MyFilesPipeline(FilesPipeline):
     @classmethod
     def from_crawler(cls, crawler, *args, **kwargs):
-        pipeline = super().from_crawler(crawler, *args, **kwargs)
         cls.FILES_STORE = crawler.settings.get('FILES_STORE')
-
-        return pipeline
+        
+        return super().from_crawler(crawler, *args, **kwargs)
 
     def open_spider(self, spider):
         self.downloader = Downloader()
-
-    def file_path(self, request, response=None, info=None, *, item=None):
-        return unquote(os.path.basename(urlparse(request.url).path))
 
     def process_item(self, item, spider):
         file_url = item.get(self.files_urls_field, [])[0]
