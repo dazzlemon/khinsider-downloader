@@ -16,14 +16,13 @@ class MySpider(scrapy.Spider):
         super().__init__(*args, **kwargs)
         self.start_url = kwargs.get('start_url')
         self.links = []
-        self.custom_settings['FILES_STORE'] = kwargs.get('path', None)
 
     def start_requests(self):
-        if not self.start_url or not self.custom_settings['FILES_STORE']:
+        if not self.start_url:
             print(
                 'Usage: scrapy runspider myspider.py '
                 '-a start_url=<URL> '
-                '-a path=<PATH>'
+                '[-s FILES_STORE=<PATH>]'
             )
         else:
             yield scrapy.Request(url=self.start_url, callback=self.parse_main_page)
