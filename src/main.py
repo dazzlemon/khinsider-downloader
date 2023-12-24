@@ -3,6 +3,7 @@ main.py
 """
 
 import sys
+import shutil
 import os
 import multiprocessing
 from urllib.parse import unquote, urlparse
@@ -16,8 +17,12 @@ from impl.download_links import (
     extract_covers_links
 )
 
-from cli.fetch_html import fetch_html_from_path, fetch_main_page, clear_line
 from packages.util import not_none
+from packages.fetch_html import fetch_html, HtmlException
+
+
+BASE_URL = 'https://downloads.khinsider.com'
+
 
 def main():
     """
@@ -37,6 +42,23 @@ def main():
     download(save_path, download_links + covers_links)
 
 
+def fetch_main_page(url):
+    """
+    Fetch main page.
+    """
+    print('Fetching main page')
+    try:
+        return fetch_html(url)
+    except HtmlException as error:
+        print(error.message, file=sys.stderr)
+        sys.exit(-1)
+
+
+def clear_line():
+    columns, _ = shutil.get_terminal_size()
+    print(' ' * columns, end='\r')
+
+
 def extract_covers_links_cli(html_content):
     print('Scraping cover art links', end='')
     covers_links = extract_covers_links(html_content)
@@ -48,15 +70,29 @@ def get_song_download_links(song_pages_paths):
     print('Scraping song download links', end='\r')
 
     with multiprocessing.Pool() as pool:
-        song_pages_htmls = pool.map(fetch_html_from_path, song_pages_paths)
-        song_pages_htmls = filter(not_none, song_pages_htmls)
-        downloads_links = pool.map(extract_download_links, song_pages_htmls)
-        best_download_links =  pool.map(choose_best_download_link, downloads_links)
+        download_links = pool.map(process_song_page, song_pages_paths)
+
+    errors, download_links = list(zip(*download_links))
+    errors = list(filter(not_none, errors))
+    download_links = list(filter(not_none, download_links))
 
     clear_line()
-    print(f'Scraping song download links - Got {len(best_download_links)}')
+    print(f'Scraping song download links - Got {len(download_links)}')
 
-    return best_download_links
+    for error in errors:
+        print(error.message, file=sys.stderr)
+
+    return download_links
+
+
+def process_song_page(path):
+    try:
+        html_content = fetch_html(BASE_URL + path)
+        download_links = extract_download_links(html_content)
+
+        return None, choose_best_download_link(download_links)
+    except HtmlException as error:
+        return error, None
 
 
 def download(save_path, links):
