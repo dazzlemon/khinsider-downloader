@@ -20,15 +20,15 @@ class MySpider(scrapy.Spider):
         yield scrapy.Request(url=start_url, callback=self.parse_main_page)
 
     def parse_main_page(self, response):
-        cover_art_download_links = response.xpath('//div[@class="albumImage"]/child::a/@href').getall()
+        cover_art_download_links = response.xpath('//div[@class="albumImage"]/a/@href').getall()
         for link in cover_art_download_links:
             print(link)
 
-        song_pages_paths = response.xpath('//td[@class="playlistDownloadSong"]/child::a/@href').getall()
+        song_pages_paths = response.xpath('//td[@class="playlistDownloadSong"]/a/@href').getall()
         for path in song_pages_paths:
             yield response.follow(path, callback=self.parse_song_page)
 
     def parse_song_page(self, response):
-        links = response.xpath('//span[@class="songDownloadLink"]/parent::a/@href').getall()
+        links = response.xpath('//span[@class="songDownloadLink"]/../@href').getall()
         flac_link = next(filter(lambda link: link.endswith('.flac'), links), None)
         print(flac_link or next(iter(links), None))
