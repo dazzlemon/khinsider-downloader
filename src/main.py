@@ -32,7 +32,7 @@ def main():
 
     html_content = fetch_main_page(url)
     covers_links = extract_covers_links_cli(html_content)
-    song_pages_paths = extract_song_pages_paths_cli(html_content)
+    song_pages_paths = extract_song_pages_paths(html_content)
     download_links = get_song_download_links(song_pages_paths)
     download(save_path, download_links + covers_links)
 
@@ -42,13 +42,6 @@ def extract_covers_links_cli(html_content):
     covers_links = extract_covers_links(html_content)
     print(f' - Got {len(covers_links)}')
     return covers_links
-
-
-def extract_song_pages_paths_cli(html_content):
-    print('Scraping song pages links', end='')
-    song_pages_paths = extract_song_pages_paths(html_content)
-    print(f' - Got {len(song_pages_paths)}')
-    return song_pages_paths
 
 
 def get_song_download_links(song_pages_paths):
