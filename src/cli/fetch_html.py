@@ -4,10 +4,9 @@ fetch_html cli.
 import sys
 import os
 import shutil
-from urllib.parse import unquote
+from urllib.parse import unquote, urlparse
 from functional import seq
 from packages.util import not_none
-from packages.download_file import filename_from_url
 from packages.fetch_html import fetch_html, HtmlException
 
 
@@ -34,7 +33,7 @@ def fetch_html_from_path(path):
     Fetch HTML content from a paths.
     """
     url = BASE_URL + path
-    filename = unquote(filename_from_url(url))
+    filename = unquote(unquote(os.path.basename(urlparse(url).path)))
     songname, _ = os.path.splitext(filename)
     clear_line()
     print(f'Scraping song download links - {songname}', end='\r')

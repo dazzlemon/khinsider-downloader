@@ -4,7 +4,10 @@ main.py
 
 import sys
 import os
+from urllib.parse import unquote, urlparse
 from functional import seq
+from parfive import Downloader
+
 from impl.extract_song_pages import extract_song_pages_paths
 
 from impl.download_links import (
@@ -13,7 +16,6 @@ from impl.download_links import (
     extract_covers_links
 )
 
-from packages.download_file import download_file, filename_from_url
 from cli.fetch_html import fetch_htmls, fetch_main_page
 
 
@@ -61,11 +63,13 @@ def get_song_download_links(song_pages_paths):
 
 def download(save_path, links):
     os.makedirs(save_path, exist_ok=True)
+    downloader = Downloader()
 
     for link in links:
-        filename = filename_from_url(link)
-        full_path = os.path.join(save_path, filename)
-        download_file(link, full_path)
+        filename = unquote(os.path.basename(urlparse(link).path))
+        downloader.enqueue_file(link, path=save_path, filename=filename)
+
+    downloader.download()
 
 
 if __name__ == "__main__":
