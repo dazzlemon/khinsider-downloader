@@ -3,7 +3,7 @@ from urllib.parse import unquote, urlparse
 from scrapy.pipelines.files import FilesPipeline
 from parfive import Downloader
 
-class MyFilesPipeline(FilesPipeline):
+class Pipeline(FilesPipeline):
     @classmethod
     def from_crawler(cls, crawler, *args, **kwargs):
         cls.FILES_STORE = crawler.settings.get('FILES_STORE')

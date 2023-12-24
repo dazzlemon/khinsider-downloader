@@ -1,15 +1,13 @@
 import scrapy
 
-class MySpider(scrapy.Spider):
+class Spider(scrapy.Spider):
     name = 'my_spider'
 
     custom_settings = {
         'LOG_LEVEL': 'CRITICAL',
         'CONCURRENT_REQUESTS': 8,
         'CONCURRENT_REQUESTS_PER_DOMAIN': 8,
-        'ITEM_PIPELINES': {
-            'crawler.pipelines.MyFilesPipeline': 1,
-        },
+        'ITEM_PIPELINES': {'pipeline.Pipeline': 1},
     }
 
     def __init__(self, *args, **kwargs):
