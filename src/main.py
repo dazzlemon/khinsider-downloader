@@ -4,8 +4,8 @@ main.py
 
 import sys
 import os
+import multiprocessing
 from urllib.parse import unquote, urlparse
-from functional import seq
 from parfive import Downloader
 
 from impl.extract_song_pages import extract_song_pages_paths
@@ -16,8 +16,8 @@ from impl.download_links import (
     extract_covers_links
 )
 
-from cli.fetch_html import fetch_htmls, fetch_main_page
-
+from cli.fetch_html import fetch_html_from_path, fetch_main_page, clear_line
+from packages.util import not_none
 
 def main():
     """
@@ -52,13 +52,19 @@ def extract_song_pages_paths_cli(html_content):
 
 
 def get_song_download_links(song_pages_paths):
-    song_pages_htmls = fetch_htmls(song_pages_paths)
+    print('Scraping song download links')
+    
+    with multiprocessing.Pool() as pool:
+        song_pages_htmls = pool.map(fetch_html_from_path, song_pages_paths)
+        song_pages_htmls = filter(not_none, song_pages_htmls)
+        downloads_links = pool.map(extract_download_links, song_pages_htmls)
 
-    download_links = seq(song_pages_htmls)\
-        .map(extract_download_links)\
-        .map(choose_best_download_link)\
-        .to_list()
-    return download_links
+        best_download_links =  pool.map(choose_best_download_link, downloads_links)
+
+    clear_line()
+    print(f'Scraping song download links - Got {len(best_download_links)}')
+
+    return best_download_links
 
 
 def download(save_path, links):

@@ -2,30 +2,11 @@
 fetch_html cli.
 """
 import sys
-import os
 import shutil
-from urllib.parse import unquote, urlparse
-from functional import seq
-from packages.util import not_none
 from packages.fetch_html import fetch_html, HtmlException
 
 
 BASE_URL = 'https://downloads.khinsider.com'
-
-
-def fetch_htmls(paths):
-    """
-    Fetch HTML content from a list of paths.
-    """
-    res = seq(paths)\
-        .map(fetch_html_from_path)\
-        .filter(not_none)\
-        .to_list()
-
-    clear_line()
-    print('Scraping song download links - Done')
-
-    return res
 
 
 def fetch_html_from_path(path):
@@ -33,13 +14,10 @@ def fetch_html_from_path(path):
     Fetch HTML content from a paths.
     """
     url = BASE_URL + path
-    filename = unquote(unquote(os.path.basename(urlparse(url).path)))
-    songname, _ = os.path.splitext(filename)
-    clear_line()
-    print(f'Scraping song download links - {songname}', end='\r')
     try:
         return fetch_html(url)
     except HtmlException as error:
+        # TODO: improve
         print(error.message, file=sys.stderr)
         return None
 
