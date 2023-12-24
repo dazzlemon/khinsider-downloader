@@ -1,6 +1,4 @@
 import scrapy
-import sys
-from functional import seq
 
 class MySpider(scrapy.Spider):
     name = 'my_spider'
@@ -11,17 +9,25 @@ class MySpider(scrapy.Spider):
         'CONCURRENT_REQUESTS_PER_DOMAIN': 8,
     }
 
-    def start_requests(self):
-        start_url = getattr(self, 'start_url', None)
-        if not start_url:
-            self.logger.error('Please provide a start URL using the -a start_url=<URL> option')
-            sys.exit(1)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.start_url = kwargs.get('start_url')
+        self.links = []
 
-        yield scrapy.Request(url=start_url, callback=self.parse_main_page)
+    def start_requests(self):
+        if not self.start_url:
+            print(
+                'Usage: scrapy runspider myspider.py '
+                '-a start_url=<URL> '
+            )
+
+            print(self.start_url)
+        else:
+            yield scrapy.Request(url=self.start_url, callback=self.parse_main_page)
 
     def parse_main_page(self, response):
-        cover_art_download_links = response.xpath('//div[@class="albumImage"]/a/@href').getall()
-        for link in cover_art_download_links:
+        cover_art_links = response.xpath('//div[@class="albumImage"]/a/@href').getall()
+        for link in cover_art_links:
             print(link)
 
         song_pages_paths = response.xpath('//td[@class="playlistDownloadSong"]/a/@href').getall()
