@@ -13,8 +13,8 @@ class Pipeline(FilesPipeline):
     def open_spider(self, _): self.downloader = Downloader()
 
     def process_item(self, item, _):
-        file_url = item[self.files_urls_field][0]
-        filename = unquote(os.path.basename(urlparse(file_url).path))
-        self.downloader.enqueue_file(file_url, filename=filename, path=self.FILES_STORE)
+        for url in item[self.files_urls_field]:
+            filename = unquote(os.path.basename(urlparse(url).path))
+            self.downloader.enqueue_file(url, filename=filename, path=self.FILES_STORE)
 
     def close_spider(self, _): self.downloader.download()

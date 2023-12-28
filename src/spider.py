@@ -21,12 +21,11 @@ class Spider(scrapy.Spider):
 
     def parse_main_page(self, response):
         cover_art_links = response.xpath('//div[@class="albumImage"]/a/@href').getall()
-        yield from ({'file_urls': [link]} for link in cover_art_links)
+        yield {'file_urls': cover_art_links}
 
         song_pages_paths = response.xpath('//td[@class="playlistDownloadSong"]/a/@href').getall()
         yield from response.follow_all(song_pages_paths, callback=self.parse_song_page)
 
     def parse_song_page(self, response):
         links = response.xpath('//span[@class="songDownloadLink"]/../@href').getall()
-        flac_link = next(filter(lambda link: link.endswith('.flac'), links), None)
-        yield {'file_urls': [flac_link or next(iter(links), None)]}
+        yield {'file_urls': sorted(links, key=lambda link: not link.endswith('.flac'))[0:1]}
