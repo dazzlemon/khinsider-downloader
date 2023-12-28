@@ -10,19 +10,14 @@ class Spider(scrapy.Spider):
         'ITEM_PIPELINES': {'pipeline.Pipeline': 1},
     }
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.start_url = kwargs.get('start_url')
-
     def start_requests(self):
-        if not self.start_url:
+        start_url = getattr(self, 'start_url', None)
+        if not start_url:
             print(
-                'Usage: scrapy runspider myspider.py '
-                '-a start_url=<URL> '
-                '[-s FILES_STORE=<PATH>]'
+                'Usage: run.(sh|bat) <LINK TO ALBUM> [<ARGUMENTS FOR SCRAPY>]'
             )
         else:
-            yield scrapy.Request(url=self.start_url, callback=self.parse_main_page)
+            yield scrapy.Request(url=start_url, callback=self.parse_main_page)
 
     def parse_main_page(self, response):
         cover_art_links = response.xpath('//div[@class="albumImage"]/a/@href').getall()
