@@ -1,16 +1,20 @@
 Usage:
 
-```sh
-run.sh <LINK TO ALBUM> [<ARGUMENTS FOR SCRAPY>]
-```
+1. download source
+2. install python, scrapy, and parfive
+3. Run run-scripts:
+   
+    Linux:
+    ```sh
+    run.sh <LINK TO ALBUM> [<ARGUMENTS FOR SCRAPY>]
+    ```
+    
+    Windows:
+    ```sh
+    run.bat <LINK TO ALBUM> [<ARGUMENTS FOR SCRAPY>]
+    ```
 
-or
-
-```sh
-run.bat <LINK TO ALBUM> [<ARGUMENTS FOR SCRAPY>]
-```
-
-the most useful argument is `-FILES_STORE=<PATH TO WHERE YOU WANT ALBUM DOWNLOADED TO>`
+    the most useful argument is `-s FILES_STORE=<PATH TO WHERE YOU WANT ALBUM DOWNLOADED TO>`
 
 Note that this gif is recorded on v2, so command is different, and the output is a bit more verbose than on latest versions
 
