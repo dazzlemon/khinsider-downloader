@@ -3,13 +3,6 @@ import scrapy
 class Spider(scrapy.Spider):
     name = 'my_spider'
 
-    custom_settings = {
-        'LOG_LEVEL': 'CRITICAL',
-        'CONCURRENT_REQUESTS': 8,
-        'CONCURRENT_REQUESTS_PER_DOMAIN': 8,
-        'ITEM_PIPELINES': {'pipeline.Pipeline': 1},
-    }
-
     def start_requests(self):
         start_url = getattr(self, 'start_url', None)
         if not start_url:
