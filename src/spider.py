@@ -30,8 +30,7 @@ class Spider(scrapy.Spider):
             yield {'file_urls': [link]}
 
         song_pages_paths = response.xpath('//td[@class="playlistDownloadSong"]/a/@href').getall()
-        for path in song_pages_paths:
-            yield response.follow(path, callback=self.parse_song_page)
+        yield from response.follow_all(song_pages_paths, callback=self.parse_song_page)
 
     def parse_song_page(self, response):
         links = response.xpath('//span[@class="songDownloadLink"]/../@href').getall()
