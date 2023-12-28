@@ -10,10 +10,10 @@ class Pipeline(FilesPipeline):
 
         return super().from_crawler(crawler, *args, **kwargs)
 
-    def open_spider(self, spider):
+    def open_spider(self, _):
         self.downloader = Downloader()
 
-    def process_item(self, item, spider):
+    def process_item(self, item, _):
         file_url = item.get(self.files_urls_field, [])[0]
         filename = unquote(os.path.basename(urlparse(file_url).path))
         self.downloader.enqueue_file(file_url, filename=filename, path=self.FILES_STORE)
