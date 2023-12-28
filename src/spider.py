@@ -21,8 +21,7 @@ class Spider(scrapy.Spider):
 
     def parse_main_page(self, response):
         cover_art_links = response.xpath('//div[@class="albumImage"]/a/@href').getall()
-        for link in cover_art_links:
-            yield {'file_urls': [link]}
+        yield from ({'file_urls': [link]} for link in cover_art_links)
 
         song_pages_paths = response.xpath('//td[@class="playlistDownloadSong"]/a/@href').getall()
         yield from response.follow_all(song_pages_paths, callback=self.parse_song_page)
