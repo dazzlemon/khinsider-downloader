@@ -13,9 +13,7 @@ class Spider(scrapy.Spider):
     def start_requests(self):
         start_url = getattr(self, 'start_url', None)
         if not start_url:
-            print(
-                'Usage: run.(sh|bat) <LINK TO ALBUM> [<ARGUMENTS FOR SCRAPY>]'
-            )
+            print('Usage: run.(sh|bat) <LINK TO ALBUM> [<ARGUMENTS FOR SCRAPY>]')
         else:
             yield scrapy.Request(url=start_url, callback=self.parse_main_page)
 
