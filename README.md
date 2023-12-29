@@ -6,12 +6,12 @@ Usage:
    
     Linux:
     ```sh
-    run.sh <LINK TO ALBUM> [<ARGUMENTS FOR SCRAPY>]
+    run.sh albums.txt [<ARGUMENTS FOR SCRAPY>]
     ```
     
     Windows:
     ```sh
-    run.bat <LINK TO ALBUM> [<ARGUMENTS FOR SCRAPY>]
+    run.bat albums.txt [<ARGUMENTS FOR SCRAPY>]
     ```
 
     the most useful argument is `-s FILES_STORE=<PATH TO WHERE YOU WANT ALBUM DOWNLOADED TO>`
