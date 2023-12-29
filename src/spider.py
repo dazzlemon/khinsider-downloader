@@ -18,5 +18,5 @@ class Spider(scrapy.Spider):
         yield from response.follow_all(song_pages_paths, callback=self.parse_song_page)
 
     def parse_song_page(self, response):
-        links = response.xpath('//span[@class="songDownloadLink"]/../@href').getall()
-        yield {'file_urls': sorted(links, key=lambda link: not link.endswith('.flac'))[0:1]}
+        link = response.xpath('//span[@class="songDownloadLink"]/../@href[re:test(., "\\.flac$")]').get()
+        yield {'file_urls': [link]}
